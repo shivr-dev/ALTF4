@@ -1,0 +1,3 @@
+/* base reset — OreUI handles everything else */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; }

@@ -1,0 +1,366 @@
+/* ── Hero Section ── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #2A2A2A;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  padding: 80px 20px 60px;
+}
+
+/* Dark overlay for text readability */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  max-width: 1000px;
+}
+
+/* ── Large Studio Logo ── */
+.studio-logo {
+  width: min(900px, 92vw);
+  height: auto;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 6px 32px rgba(0, 0, 0, 0.85));
+  animation: logo-bob 3.5s ease-in-out infinite;
+  margin-bottom: 32px;
+}
+
+@keyframes logo-bob {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* Logo text fallback */
+.logo-fallback {
+  font-family: 'Minecraft Ten', 'Press Start 2P', monospace;
+  text-align: center;
+  margin-bottom: 32px;
+  animation: logo-bob 3.5s ease-in-out infinite;
+}
+
+.logo-fallback-top {
+  display: block;
+  font-size: clamp(18px, 4vw, 36px);
+  color: #FFE866;
+  text-shadow: 3px 3px 0 #8A7000, 5px 5px 0 rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+
+.logo-fallback-main {
+  display: block;
+  font-size: clamp(40px, 11vw, 110px);
+  color: #EAEADC;
+  text-shadow: 5px 5px 0 #1C2460, 8px 8px 0 rgba(0, 0, 0, 0.6);
+  background: #1D2B7A;
+  padding: 10px 28px 18px;
+  border-top: 4px solid #2A3C96;
+  border-bottom: 4px solid #0D1440;
+  border-left: 4px solid #0D1440;
+  border-right: 4px solid #0D1440;
+  letter-spacing: 0.04em;
+}
+
+/* ── Slogan ── */
+.slogan-wrap {
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 28px;
+}
+
+.slogan-text {
+  font-family: 'NotoSans Bold', 'Noto Sans SC', sans-serif;
+  font-size: clamp(15px, 2.2vw, 20px);
+  font-weight: 900;
+}
+
+/* Alt+F4 keyboard key */
+.slogan-key {
+  display: inline-block;
+  font-family: 'Minecraft Ten', 'Press Start 2P', monospace;
+  font-size: 0.8em;
+  background: #D0D1D4;
+  color: #1E1E1F;
+  border: 2px solid #1E1E1F;
+  border-bottom: 4px solid #58585A;
+  box-shadow: inset 3px 3px rgba(255, 255, 255, 0.6), inset -3px -7px rgba(255, 255, 255, 0.4);
+  padding: 1px 10px 5px;
+  vertical-align: middle;
+  line-height: 1.4;
+}
+
+/* ── Page wrapper (below hero) ── */
+.page-body {
+  background-color: #48494A;
+  color: #FFFFFF;
+  padding: 0 16px;
+}
+
+.page-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ── Section spacing ── */
+.section-gap    { height: 20px; }
+.section-gap-lg { height: 36px; }
+
+/* ── Section header ── */
+.section-head {
+  align-items: center;
+  border-top: 2px solid #5A5B5C;
+  border-bottom: 2px solid #333334;
+  display: flex;
+  font-family: 'Minecraft Seven', 'Press Start 2P', monospace;
+  font-size: 18px;
+  justify-content: center;
+  min-height: 70px;
+  padding: 12px 20px;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+/* ── Projects ── */
+.project-ore-block {
+  align-items: stretch;
+  border: 2px solid #58585A;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+@media (max-width: 640px) {
+  .project-ore-block { grid-template-columns: 1fr; }
+}
+
+.project-ore-block::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -150%;
+  width: 20px; height: 100%;
+  background-color: rgba(255, 255, 255, 0.55);
+  transform: skewX(-45deg);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.project-ore-block::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -150%;
+  width: 8px; height: 100%;
+  background-color: rgba(255, 255, 255, 0.45);
+  transform: skewX(-45deg);
+  z-index: 4;
+  pointer-events: none;
+}
+
+.project-ore-block:hover::before { animation: thickFlash 0.65s cubic-bezier(0.4, 0, 0.2, 1); }
+.project-ore-block:hover::after  { animation: thinFlash  0.65s 0.02s cubic-bezier(0.4, 0, 0.2, 1); }
+
+.project-ore-block:hover {
+  border-color: #6D6D6E;
+  background-color: #505153;
+}
+
+/* ── Project image pane ── */
+.proj-img-pane {
+  position: relative;
+  background: #1E1F20;
+  border-right: 2px solid #333334;
+  min-height: 240px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .proj-img-pane { border-right: none; border-bottom: 2px solid #333334; }
+}
+
+.proj-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  display: block;
+}
+
+.proj-img-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px;
+  width: 100%;
+  height: 100%;
+}
+
+.fallback-pixel-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  width: 128px;
+  height: 128px;
+  image-rendering: pixelated;
+  border: 2px solid #333334;
+}
+
+.fallback-pixel-grid div { border: 0.5px solid rgba(0, 0, 0, 0.2); }
+
+.fallback-label {
+  font-family: 'Minecraft Seven', 'Press Start 2P', monospace;
+  font-size: 13px;
+  color: #FFE866;
+  text-shadow: 2px 2px 0 #8A7000;
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* ── Project info pane ── */
+.proj-info-pane {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+}
+
+.proj-name {
+  font-family: 'Minecraft Seven', 'Press Start 2P', monospace;
+  font-size: clamp(14px, 1.8vw, 20px);
+  color: #FFFFFF;
+  line-height: 1.7;
+}
+
+.proj-name-zh {
+  font-family: 'NotoSans Bold', 'Noto Sans SC', sans-serif;
+  font-size: 13px;
+  color: #8C8D90;
+  margin-top: -8px;
+}
+
+.proj-desc {
+  font-family: 'NotoSans Bold', 'Noto Sans SC', sans-serif;
+  font-size: 14px;
+  color: #D0D1D4;
+  line-height: 1.8;
+  border-left: 3px solid #3C8527;
+  padding-left: 12px;
+}
+
+.proj-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.proj-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 2px solid #333334;
+}
+
+.proj-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'NotoSans Bold', 'Noto Sans SC', sans-serif;
+  font-size: 13px;
+  color: #B0B1B4;
+}
+
+/* ── About cards ── */
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+
+@media (max-width: 700px) {
+  .about-grid { grid-template-columns: 1fr; }
+}
+
+.about-card {
+  border-bottom: 2px solid #333334;
+  border-left: 2px solid #333334;
+  border-right: 2px solid #333334;
+  border-top: 2px solid #5A5B5C;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 3px;
+  padding: 20px 18px;
+}
+
+.about-card-title {
+  font-family: 'Minecraft Seven', 'Press Start 2P', monospace;
+  font-size: 13px;
+  color: #FFE866;
+  text-shadow: 1px 1px 0 #8A7000;
+}
+
+.about-card-body {
+  font-family: 'NotoSans Bold', 'Noto Sans SC', sans-serif;
+  font-size: 14px;
+  color: #B0B1B4;
+  line-height: 1.8;
+}
+
+/* ── Footer ── */
+.site-footer {
+  border-top: 2px solid #5A5B5C;
+  border-bottom: 2px solid #333334;
+  background-color: #3A3B3D;
+  padding: 28px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: #FFFFFF;
+  margin-top: 20px;
+}
+
+.footer-brand {
+  font-family: 'Minecraft Ten', 'Press Start 2P', monospace;
+  font-size: 15px;
+  color: #FFE866;
+  text-shadow: 2px 2px 0 #8A7000;
+}
+
+.footer-slogan {
+  font-family: 'NotoSans Bold', 'Noto Sans SC', sans-serif;
+  font-size: 14px;
+  color: #8C8D90;
+}
+
+.footer-copy {
+  font-family: 'NotoSans Bold', 'Noto Sans SC', sans-serif;
+  font-size: 11px;
+  color: #58585A;
+}

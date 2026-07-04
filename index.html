@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ALT+F4 STUDIO | Minecraft 开发者工作室</title>
+  <meta name="description" content="创造能让你玩到想按 Alt+F4 的极致体验。Minecraft 基岩版地图与玩法开发工作室。" />
+  <link rel="icon" href="./favicon.svg" />
+
+  <style>
+    /* ── Font Faces ── */
+    @font-face {
+      font-family: 'Minecraft Ten';
+      src: url('./fonts/Minecraft-Ten.otf') format('opentype');
+    }
+    @font-face {
+      font-family: 'Minecraft Five';
+      src: url('./fonts/Minecraft-Five.otf') format('opentype');
+    }
+    @font-face {
+      font-family: 'Minecraft Five Bold';
+      src: url('./fonts/Minecraft-Five-Bold.otf') format('opentype');
+    }
+    @font-face {
+      font-family: 'Minecraft Seven';
+      src: url('./fonts/Minecraft-Seven.otf') format('opentype'),
+           url('./fonts/Minecraft-Seven-v4.ttf') format('truetype');
+    }
+    @font-face {
+      font-family: 'NotoSans Bold';
+      src: url('./fonts/NotoSans-Bold.ttf') format('truetype');
+    }
+
+    /* ────────────────────────────────────────
+       Base
+    ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      color-scheme: light !important;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: #48494A;
+      color: #FFFFFF;
+      font-family: 'Minecraft Seven', monospace;
+      min-width: 320px;
+      overflow-x: hidden;
+    }
+
+    img { display: block; max-width: 100%; }
+    a   { color: inherit; text-decoration: none; }
+
+    /* ────────────────────────────────────────
+       Header  (OreUI style)
+       font: Ten = brand, NotoSans = nav
+    ──────────────────────────────────────── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: #E6E8EB;
+      border-bottom: 4px solid #B1B2B5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 52px;
+      padding: 0 20px;
+    }
+
+    .header-brand {
+      font-family: 'Minecraft Ten', monospace;
+      font-size: 17px;
+      color: #1E1E1F;
+      letter-spacing: 0.03em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .header-nav {
+      display: flex;
+      height: 100%;
+    }
+
+    .header-nav-item {
+      font-family: 'NotoSans Bold', sans-serif;
+      font-size: 13px;
+      color: #1E1E1F;
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      height: 100%;
+      border-left: 2px solid #FFFFFF;
+      box-shadow: inset 2px 0 #A1A3A5;
+      cursor: pointer;
+      transition: background-color 0.1s;
+    }
+
+    .header-nav-item:hover  { background-color: #F4F6F9; }
+    .header-nav-item:active { background-color: #D0D1D4; }
+
+    /* ────────────────────────────────────────
+       Hero
+       full-viewport, custom bg image
+    ──────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #2A2C2E;
+      background-image: url('./image.png');
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+    }
+
+    /* dark overlay */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.48);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 80px 20px 60px;
+      width: 100%;
+      max-width: 1000px;
+      gap: 28px;
+    }
+
+    /* Studio logo — very large */
+    .studio-logo {
+      width: min(880px, 90vw);
+      height: auto;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      filter: drop-shadow(0 8px 40px rgba(0, 0, 0, 0.9));
+      animation: logo-bob 3.6s ease-in-out infinite;
+    }
+
+    @keyframes logo-bob {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-10px); }
+    }
+
+    /* Logo text fallback (shown when PNG unavailable) */
+    .logo-fallback {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      animation: logo-bob 3.6s ease-in-out infinite;
+    }
+
+    .logo-fallback-top {
+      font-family: 'Minecraft Ten', monospace;
+      font-size: clamp(20px, 4vw, 40px);
+      color: #FFE866;
+      text-shadow: 3px 3px 0 #8A7000, 5px 5px 0 rgba(0, 0, 0, 0.6);
+      letter-spacing: 0.12em;
+    }
+
+    .logo-fallback-main {
+      font-family: 'Minecraft Ten', monospace;
+      font-size: clamp(48px, 12vw, 120px);
+      color: #EAEADC;
+      text-shadow: 6px 6px 0 #1C2460, 10px 10px 0 rgba(0, 0, 0, 0.7);
+      background: #1D2B7A;
+      padding: 10px 32px 20px;
+      border-top: 4px solid #2A3C96;
+      border-left: 4px solid #0D1440;
+      border-right: 4px solid #0D1440;
+      border-bottom: 6px solid #0D1440;
+      letter-spacing: 0.05em;
+    }
+
+    /* Slogan — OreUI important_banner
+       font: Seven = general text */
+    .slogan-banner {
+      background-color: #FFE866;
+      color: #000000;
+      font-family: 'Minecraft Seven', monospace;
+      font-size: clamp(14px, 2vw, 18px);
+      font-weight: bold;
+      padding: 12px 20px;
+      text-align: center;
+      width: 100%;
+      max-width: 660px;
+      line-height: 1.7;
+    }
+
+    /* Alt+F4 keyboard key */
+    .key {
+      display: inline-block;
+      font-family: 'Minecraft Ten', monospace;
+      font-size: 0.78em;
+      background: #D0D1D4;
+      color: #1E1E1F;
+      border: 2px solid #1E1E1F;
+      border-bottom: 4px solid #58585A;
+      box-shadow: inset 3px 3px rgba(255,255,255,0.6), inset -3px -7px rgba(255,255,255,0.4);
+      padding: 1px 10px 5px;
+      vertical-align: middle;
+      line-height: 1.5;
+    }
+
+    /* CTA — OreUI green_btn */
+    .cta-btn {
+      font-family: 'Minecraft Seven', monospace;
+      font-size: 14px;
+      color: #FFFFFF;
+      background-color: #3C8527;
+      border: 2px solid #1E1E1F;
+      border-bottom: none;
+      box-shadow: inset 0 -4px #1D4D13, inset 3px 3px rgba(255,255,255,0.2), inset -3px -7px rgba(255,255,255,0.1);
+      padding: 10px 32px 14px;
+      cursor: pointer;
+      transition: background-color 0.1s;
+      display: inline-block;
+    }
+
+    .cta-btn:hover  { background-color: #2A641C; box-shadow: inset 0 -4px #1D4D13, inset 3px 3px rgba(255,255,255,0.4), inset -3px -7px rgba(255,255,255,0.3); }
+    .cta-btn:active { background-color: #1D4D13; box-shadow: inset 3px 3px rgba(255,255,255,0.4), inset -3px -3px rgba(255,255,255,0.3); transform: translateY(4px); }
+
+    /* ────────────────────────────────────────
+       Marquee strip (between hero and projects)
+       font: Five = small title
+    ──────────────────────────────────────── */
+    .marquee-strip {
+      background-color: #1E1E1F;
+      border-top: 2px solid #333334;
+      border-bottom: 2px solid #333334;
+      overflow: hidden;
+      padding: 10px 0;
+    }
+
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee-scroll 28s linear infinite;
+    }
+
+    .marquee-item {
+      font-family: 'Minecraft Five', monospace;
+      font-size: 13px;
+      color: #FFE866;
+      white-space: nowrap;
+      padding: 0 48px;
+      letter-spacing: 0.06em;
+    }
+
+    .marquee-dot {
+      color: #3C8527;
+    }
+
+    @keyframes marquee-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ────────────────────────────────────────
+       Page body (all sections below hero)
+    ──────────────────────────────────────── */
+    .page-body {
+      background-color: #48494A;
+      padding: 0 16px;
+    }
+
+    .page-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .gap    { height: 20px; }
+    .gap-lg { height: 36px; }
+
+    /* ────────────────────────────────────────
+       Section headers
+       font: Five = small title
+       border: OreUI ore-main style
+    ──────────────────────────────────────── */
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 66px;
+      padding: 14px 20px;
+      text-align: center;
+      border-top: 2px solid #5A5B5C;
+      border-bottom: 2px solid #333334;
+      border-left: 2px solid #333334;
+      border-right: 2px solid #333334;
+      font-family: 'Minecraft Five', monospace;
+      font-size: 17px;
+      color: #FFFFFF;
+      letter-spacing: 0.04em;
+    }
+
+    /* ────────────────────────────────────────
+       Project card (OreUI link-block flash)
+       fonts: Five=title, Seven=desc, NotoSans=tags
+    ──────────────────────────────────────── */
+    .project-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 2px solid #58585A;
+      margin: 6px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    @media (max-width: 640px) {
+      .project-card { grid-template-columns: 1fr; }
+    }
+
+    /* Flash animation (OreUI signature) */
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -150%;
+      width: 20px; height: 100%;
+      background-color: rgba(255, 255, 255, 0.55);
+      transform: skewX(-45deg);
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .project-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -150%;
+      width: 8px; height: 100%;
+      background-color: rgba(255, 255, 255, 0.45);
+      transform: skewX(-45deg);
+      z-index: 9;
+      pointer-events: none;
+    }
+
+    .project-card:hover::before { animation: flash-thick 0.65s cubic-bezier(0.4, 0, 0.2, 1); }
+    .project-card:hover::after  { animation: flash-thin  0.65s 0.02s cubic-bezier(0.4, 0, 0.2, 1); }
+    .project-card:hover         { border-color: #6D6D6E; background-color: #505153; }
+
+    @keyframes flash-thick { 0% { left: -150%; } 100% { left: 150%; } }
+    @keyframes flash-thin  { 0% { left: -150%; } 100% { left: 150%; } }
+
+    /* Image pane */
+    .proj-img-pane {
+      background: #1A1B1C;
+      border-right: 2px solid #333334;
+      min-height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    @media (max-width: 640px) {
+      .proj-img-pane {
+        border-right: none;
+        border-bottom: 2px solid #333334;
+        min-height: 200px;
+      }
+    }
+
+    .proj-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+
+    .proj-img-fallback {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 32px;
+    }
+
+    /* Pixel grid fallback art */
+    .pixel-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 14px);
+      grid-template-rows: repeat(8, 14px);
+      border: 2px solid #333334;
+      image-rendering: pixelated;
+    }
+
+    .pixel-grid div { border: 0.5px solid rgba(0,0,0,0.25); }
+
+    .pixel-label {
+      font-family: 'Minecraft Five', monospace;
+      font-size: 12px;
+      color: #FFE866;
+      text-shadow: 1px 1px 0 #8A7000;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    /* Info pane */
+    .proj-info {
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    @media (max-width: 640px) {
+      .proj-info { padding: 22px 20px; }
+    }
+
+    .proj-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    /* Tags — font: NotoSans = notes */
+    .tag {
+      font-family: 'NotoSans Bold', sans-serif;
+      font-size: 11px;
+      padding: 2px 6px;
+      color: #000000;
+    }
+
+    .tag-green  { background-color: #6CC349; }
+    .tag-blue   { background-color: #8CB3FF; }
+    .tag-yellow { background-color: #FFE866; }
+
+    /* Project title — font: Five = small title */
+    .proj-title {
+      font-family: 'Minecraft Five', monospace;
+      font-size: clamp(14px, 2vw, 19px);
+      color: #FFFFFF;
+      line-height: 1.7;
+    }
+
+    /* Chinese subtitle — font: Seven = general */
+    .proj-title-zh {
+      font-family: 'Minecraft Seven', monospace;
+      font-size: 13px;
+      color: #8C8D90;
+      margin-top: -8px;
+    }
+
+    /* Description — font: Seven = general */
+    .proj-desc {
+      font-family: 'Minecraft Seven', monospace;
+      font-size: 13px;
+      color: #C8C9CC;
+      line-height: 1.9;
+      border-left: 3px solid #3C8527;
+      padding-left: 12px;
+    }
+
+    /* Feature badges */
+    .proj-features {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      padding-top: 10px;
+      border-top: 2px solid #333334;
+    }
+
+    .feature-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-family: 'NotoSans Bold', sans-serif;
+      font-size: 12px;
+      color: #A0A1A4;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      flex-shrink: 0;
+    }
+
+    .dot-green  { background-color: #6CC349; }
+    .dot-blue   { background-color: #8CB3FF; }
+    .dot-yellow { background-color: #FFE866; }
+
+    /* Coming soon banner */
+    .coming-banner {
+      background-color: #1E1E1F;
+      margin: 0;
+      padding: 14px 20px;
+      border: 2px solid #333334;
+      border-top: none;
+      font-family: 'Minecraft Seven', monospace;
+      font-size: 13px;
+      color: #8C8D90;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    /* ────────────────────────────────────────
+       About section
+       fonts: Five=card title, Seven=body
+    ──────────────────────────────────────── */
+    .about-intro {
+      background-color: #2E6BE5;
+      color: #FFFFFF;
+      font-family: 'Minecraft Seven', monospace;
+      font-size: 13px;
+      padding: 16px 20px;
+      text-align: center;
+      line-height: 1.9;
+      border: 2px solid #333334;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (max-width: 680px) {
+      .about-grid { grid-template-columns: 1fr; }
+    }
+
+    .about-card {
+      border-top: 2px solid #5A5B5C;
+      border-bottom: 2px solid #333334;
+      border-left: 2px solid #333334;
+      border-right: 2px solid #333334;
+      padding: 22px 20px;
+      margin: 3px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Card title — font: Five = small title */
+    .card-title {
+      font-family: 'Minecraft Five Bold', monospace;
+      font-size: 12px;
+      color: #FFE866;
+      text-shadow: 1px 1px 0 #8A7000;
+      letter-spacing: 0.04em;
+    }
+
+    /* Card body — font: Seven = general */
+    .card-body {
+      font-family: 'Minecraft Seven', monospace;
+      font-size: 13px;
+      color: #A0A1A4;
+      line-height: 1.85;
+    }
+
+    /* ────────────────────────────────────────
+       Footer
+       fonts: Ten=brand, Seven=slogan, NotoSans=copy
+    ──────────────────────────────────────── */
+    .site-footer {
+      background-color: #313233;
+      border-top: 2px solid #5A5B5C;
+      border-bottom: 2px solid #333334;
+      padding: 32px 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .footer-brand {
+      font-family: 'Minecraft Ten', monospace;
+      font-size: 16px;
+      color: #FFE866;
+      text-shadow: 2px 2px 0 #8A7000;
+      letter-spacing: 0.04em;
+    }
+
+    .footer-slogan {
+      font-family: 'Minecraft Seven', monospace;
+      font-size: 13px;
+      color: #8C8D90;
+      line-height: 1.6;
+    }
+
+    .footer-divider {
+      width: 60px;
+      height: 2px;
+      background-color: #58585A;
+      margin: 4px 0;
+    }
+
+    .footer-copy {
+      font-family: 'NotoSans Bold', sans-serif;
+      font-size: 11px;
+      color: #58585A;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- ── Header ── -->
+  <header class="site-header">
+    <span class="header-brand">ALT+F4 STUDIO</span>
+    <nav class="header-nav">
+      <a href="#projects" class="header-nav-item">作品</a>
+      <a href="#about"    class="header-nav-item">关于</a>
+    </nav>
+  </header>
+
+  <!-- ── Hero ── -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+
+      <!-- Studio logo -->
+      <img
+        id="studio-logo"
+        src="./minecraft_title.png"
+        alt="ALT+F4 STUDIO"
+        class="studio-logo"
+        draggable="false"
+      />
+
+      <!-- Fallback shown if PNG missing -->
+      <div class="logo-fallback" id="logo-fallback">
+        <span class="logo-fallback-top">ALT+F4</span>
+        <span class="logo-fallback-main">STUDIO</span>
+      </div>
+
+      <!-- Slogan banner (OreUI important_banner) -->
+      <div class="slogan-banner">
+        创造能让你玩到想按&nbsp;<span class="key">Alt+F4</span>&nbsp;的极致体验。
+      </div>
+
+      <!-- CTA button -->
+      <a href="#projects" class="cta-btn">查看核心作品</a>
+
+    </div>
+  </section>
+
+  <!-- ── Marquee Strip ── -->
+  <div class="marquee-strip">
+    <div class="marquee-track">
+      <!-- content duplicated for seamless loop -->
+      <span class="marquee-item">ALT+F4 STUDIO <span class="marquee-dot">·</span> MINECRAFT BEDROCK EDITION <span class="marquee-dot">·</span> 极致体验 <span class="marquee-dot">·</span> DEFENSE BATTLE <span class="marquee-dot">·</span> 泥土商店 <span class="marquee-dot">·</span> RPG <span class="marquee-dot">·</span> 解密 <span class="marquee-dot">·</span> 生存 <span class="marquee-dot">·</span> 爆肝开发中 <span class="marquee-dot">·</span>&nbsp;</span>
+      <span class="marquee-item">ALT+F4 STUDIO <span class="marquee-dot">·</span> MINECRAFT BEDROCK EDITION <span class="marquee-dot">·</span> 极致体验 <span class="marquee-dot">·</span> DEFENSE BATTLE <span class="marquee-dot">·</span> 泥土商店 <span class="marquee-dot">·</span> RPG <span class="marquee-dot">·</span> 解密 <span class="marquee-dot">·</span> 生存 <span class="marquee-dot">·</span> 爆肝开发中 <span class="marquee-dot">·</span>&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- ── Projects ── -->
+  <section id="projects">
+    <div class="page-body">
+      <div class="page-inner">
+
+        <div class="gap-lg"></div>
+        <div class="section-head">核心作品展示 &nbsp;·&nbsp; FEATURED PROJECTS</div>
+        <div class="gap"></div>
+
+        <!-- Project card (link-block flash) -->
+        <div class="project-card">
+
+          <!-- Left: image -->
+          <div class="proj-img-pane">
+            <img
+              id="proj-img"
+              src="./dirt_store_logo.png"
+              alt="Dirt Store: Defense Battle"
+              class="proj-img"
+            />
+            <div class="proj-img-fallback" id="proj-fallback">
+              <div class="pixel-grid" id="pixel-art"></div>
+              <div class="pixel-label">DIRT STORE<br/>DEFENSE BATTLE</div>
+            </div>
+          </div>
+
+          <!-- Right: info -->
+          <div class="proj-info">
+            <div class="proj-tags">
+              <span class="tag tag-green">防守战</span>
+              <span class="tag tag-blue">Minecraft BE</span>
+              <span class="tag tag-yellow">主推</span>
+            </div>
+
+            <div>
+              <div class="proj-title">Dirt Store<br/>Defense Battle</div>
+              <div class="proj-title-zh">泥土商店：防守战</div>
+            </div>
+
+            <p class="proj-desc">
+              用泥土换取一切——武器、防御塔、士兵。在敌潮之中守护你的基地，每一波攻势都更加凶猛。经济策略与实时对抗，极致的防守体验从这里开始。
+            </p>
+
+            <div class="proj-features">
+              <div class="feature-row">
+                <span class="badge-dot dot-green"></span>策略防守玩法
+              </div>
+              <div class="feature-row">
+                <span class="badge-dot dot-blue"></span>多人联机支持
+              </div>
+              <div class="feature-row">
+                <span class="badge-dot dot-yellow"></span>持续内容更新
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Coming soon -->
+        <div class="coming-banner">
+          更多全新玩法地图（RPG、解密、生存）正在爆肝中，敬请期待……
+        </div>
+
+        <div class="gap-lg"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── About ── -->
+  <section id="about">
+    <div class="page-body">
+      <div class="page-inner">
+
+        <div class="section-head">关于工作室 &nbsp;·&nbsp; ABOUT US</div>
+        <div class="gap"></div>
+
+        <div class="about-intro">
+          ALT+F4 STUDIO 是一支专注于 Minecraft 基岩版地图与玩法开发的独立团队。<br />
+          我们相信：好的地图不只是地图，而是一段让人难以放下的体验。
+        </div>
+
+        <div class="gap"></div>
+
+        <div class="about-grid">
+          <div class="about-card">
+            <div class="card-title">GAMEPLAY FIRST</div>
+            <p class="card-body">每个机制都经过反复打磨，确保玩法新鲜感与深度并存。</p>
+          </div>
+          <div class="about-card">
+            <div class="card-title">TECH CRAFT</div>
+            <p class="card-body">深度使用命令、脚本 API 与行为包，突破游戏边界。</p>
+          </div>
+          <div class="about-card">
+            <div class="card-title">PASSION DRIVEN</div>
+            <p class="card-body">用爱发电，用极致标准交付每一张地图。</p>
+          </div>
+        </div>
+
+        <div class="gap-lg"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <div class="footer-brand">ALT+F4 STUDIO</div>
+    <div class="footer-divider"></div>
+    <p class="footer-slogan">创造能让你玩到想按 Alt+F4 的极致体验。</p>
+    <p class="footer-copy">© 2024 ALT+F4 STUDIO. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // ── Logo fallback ──
+    var logo = document.getElementById('studio-logo');
+    var fallback = document.getElementById('logo-fallback');
+    logo.addEventListener('error', function () {
+      logo.style.display = 'none';
+      fallback.style.display = 'flex';
+    });
+
+    // ── Project image fallback ──
+    var projImg  = document.getElementById('proj-img');
+    var projFb   = document.getElementById('proj-fallback');
+    var pixelArt = document.getElementById('pixel-art');
+
+    // Build pixel grid (8×8 dirt/grass pattern)
+    var colors = ['#9E6B3A','#8B5A2B','#7A4E24','#A07040','#5DA42E','#3A6B1C'];
+    var picks  = [0,0,1,0,0,1,0,0,0,1,0,0,1,0,0,0,1,0,0,0,1,0,0,1,0,0,0,1,0,0,0,0,4,5,4,4,5,4,4,5,4,5,4,4,5,4,4,5,5,4,5,5,4,5,5,4,5,4,5,5,4,5,5,4];
+    picks.forEach(function (p) {
+      var cell = document.createElement('div');
+      cell.style.background = colors[p];
+      cell.style.border = '0.5px solid rgba(0,0,0,0.2)';
+      pixelArt.appendChild(cell);
+    });
+
+    projImg.addEventListener('error', function () {
+      projImg.style.display = 'none';
+      projFb.style.display  = 'flex';
+    });
+  </script>
+
+</body>
+</html>

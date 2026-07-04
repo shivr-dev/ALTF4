@@ -1,0 +1,354 @@
+/* OreUI — embedded from oreui.css + loading_mask.css + public_style.css */
+
+/* ── Font Faces ── */
+/* Fonts live in src/fonts/ so Vite bundles and rewrites URLs correctly for any deployment base */
+@font-face {
+  font-family: 'Minecraft Ten';
+  src: url('./fonts/Minecraft-Ten.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Minecraft Seven';
+  src: url('./fonts/Minecraft-Seven.otf') format('opentype');
+  unicode-range: U+0000-00FF, U+4E00-9FFF, U+3400-4DBF;
+}
+@font-face {
+  font-family: 'Minecraft Five Bold';
+  src: url('./fonts/Minecraft-Five-Bold.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Minecraft Five';
+  src: url('./fonts/Minecraft-Five.otf') format('opentype');
+}
+@font-face {
+  font-family: 'NotoSans Bold';
+  src: url('./fonts/NotoSans-Bold.ttf') format('truetype');
+  unicode-range: U+0000-00FF, U+4E00-9FFF, U+3400-4DBF;
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-family: 'NotoSans Bold', 'Noto Sans SC', sans-serif;
+  height: 100%;
+  overscroll-behavior: contain;
+  color-scheme: light !important;
+}
+
+::selection { background-color: transparent; color: inherit; }
+
+* { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+
+body {
+  background-color: #48494A;
+  height: 100%;
+  margin: 0;
+  min-width: 330px;
+  scrollbar-width: none;
+  -webkit-user-select: none;
+  overflow-x: hidden;
+}
+
+#root { min-height: 100vh; width: 100%; }
+
+a { color: inherit; text-decoration: none; }
+
+/* ── OreUI: Header ── */
+.ore-header {
+  align-items: center;
+  background-color: #E6E8EB;
+  border-bottom: 4px solid #B1B2B5;
+  display: flex;
+  height: 52px;
+  justify-content: space-between;
+  min-width: 330px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 0 16px;
+}
+
+.ore-header-brand {
+  font-family: 'Minecraft Ten', 'Press Start 2P', monospace;
+  font-size: 18px;
+  color: #1E1E1F;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.ore-header-nav {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  gap: 0;
+}
+
+.ore-header-item {
+  align-items: center;
+  border-left: 2px solid #FFFFFF;
+  box-shadow: inset 2px 0 #A1A3A5;
+  cursor: pointer;
+  display: flex;
+  font-family: 'NotoSans Bold', 'Noto Sans SC', sans-serif;
+  font-size: 14px;
+  color: #1E1E1F;
+  height: 100%;
+  justify-content: center;
+  padding: 0 18px;
+  transition: background-color 0.1s;
+}
+
+.ore-header-item:hover { background-color: #F4F6F9; }
+.ore-header-item:active { background-color: #D0D1D4; }
+
+/* ── OreUI: Main Block ── */
+.ore-main {
+  align-items: center;
+  border-bottom: 2px solid #333334;
+  border-left: 2px solid #333334;
+  border-right: 2px solid #333334;
+  border-top: 2px solid #5A5B5C;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  justify-content: center;
+  min-height: 66px;
+  padding: 8px 0;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.ore-main-title {
+  align-items: center;
+  border-bottom: 2px solid #333334;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  display: flex;
+  font-family: 'Minecraft Seven', 'Press Start 2P', monospace;
+  font-size: 22px;
+  justify-content: center;
+  min-height: 70px;
+  text-align: center;
+  color: #FFFFFF;
+  padding: 10px 20px;
+}
+
+.ore-section-title-block {
+  border-bottom: 2px solid #333334;
+  border-left: 0;
+  border-right: 0;
+  border-top: 2px solid #5A5B5C;
+}
+
+/* ── OreUI: Link Block ── */
+.ore-link-block {
+  align-items: center;
+  border: 2px solid #58585A;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 6px;
+  overflow: hidden;
+  padding: 5px 17px;
+  position: relative;
+  color: #FFFFFF;
+}
+
+.ore-link-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 15px;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.6);
+  transform: skewX(-45deg);
+  transition: none;
+  z-index: 2;
+}
+
+.ore-link-block::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 6px;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+  transform: skewX(-45deg);
+  transition: none;
+  z-index: 1;
+}
+
+.ore-link-block:hover::before { animation: thickFlash 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+.ore-link-block:hover::after  { animation: thinFlash  0.6s 0.01s cubic-bezier(0.4, 0, 0.2, 1); }
+
+@keyframes thickFlash { 0% { left: -150%; } 100% { left: 150%; } }
+@keyframes thinFlash  { 0% { left: -150%; } 100% { left: 150%; } }
+
+.ore-link-block:hover, .ore-link-block:active {
+  border-color: #6D6D6E;
+  background-color: #58585A;
+}
+
+/* ── OreUI: Buttons ── */
+.ore-btn {
+  align-items: center;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: 'NotoSans Bold', 'Noto Sans SC', sans-serif;
+  font-size: 15px;
+  height: 40px;
+  justify-content: center;
+  margin: 6px;
+  padding-bottom: 6px;
+  border: 2px solid #1E1E1F;
+}
+
+.ore-btn:active:not(.ore-btn--disabled) {
+  height: 36px;
+  margin-top: 10px;
+  padding-bottom: 2px;
+}
+
+.ore-btn--green {
+  background-color: #3C8527;
+  box-shadow: inset 0 -4px #1D4D13, inset 3px 3px rgba(255,255,255,0.2), inset -3px -7px rgba(255,255,255,0.1);
+  color: #FFFFFF;
+  padding: 0 28px 6px;
+}
+
+.ore-btn--green:hover {
+  background-color: #2A641C;
+  box-shadow: inset 0 -4px #1D4D13, inset 3px 3px rgba(255,255,255,0.4), inset -3px -7px rgba(255,255,255,0.3);
+}
+
+.ore-btn--green:active {
+  background-color: #1D4D13;
+  box-shadow: inset 3px 3px rgba(255,255,255,0.4), inset -3px -3px rgba(255,255,255,0.3);
+}
+
+.ore-btn--normal {
+  background-color: #D0D1D4;
+  box-shadow: inset 0 -4px #58585A, inset 3px 3px rgba(255,255,255,0.6), inset -3px -7px rgba(255,255,255,0.4);
+  color: #000000;
+  padding: 0 28px 6px;
+}
+
+.ore-btn--normal:hover {
+  background-color: #B1B2B5;
+  box-shadow: inset 0 -4px #58585A, inset 3px 3px rgba(255,255,255,0.8), inset -3px -7px rgba(255,255,255,0.6);
+}
+
+/* ── OreUI: Banners ── */
+.ore-banner {
+  align-items: center;
+  color: #FFFFFF;
+  display: flex;
+  font-family: 'NotoSans Bold', 'Noto Sans SC', sans-serif;
+  hyphens: auto;
+  justify-content: center;
+  margin: 10px 20px;
+  min-height: 30px;
+  padding: 10px;
+  text-align: center;
+  width: calc(100% - 40px);
+  word-wrap: break-word;
+}
+
+.ore-banner--neutral    { background-color: #1E1E1F; }
+.ore-banner--info       { background-color: #2E6BE5; }
+.ore-banner--important  {
+  background-color: #FFE866;
+  color: #000000;
+  font-weight: bolder;
+}
+
+/* ── OreUI: Tags ── */
+.ore-tag {
+  color: #000000;
+  display: inline-flex;
+  font-size: 12px;
+  font-family: 'NotoSans Bold', 'Noto Sans SC', sans-serif;
+  margin-right: 5px;
+  padding: 1px 4px;
+  text-wrap: nowrap;
+  vertical-align: middle;
+}
+
+.ore-tag--green  { background-color: #6CC349; }
+.ore-tag--yellow { background-color: #FFE866; }
+.ore-tag--blue   { background-color: #8CB3FF; }
+.ore-tag--red    { background-color: #F46D6D; }
+
+/* ── OreUI: Badge ── */
+.ore-badge-area { align-items: center; display: flex; gap: 4px; }
+
+.ore-badge {
+  height: 6px;
+  width: 6px;
+  display: inline-block;
+}
+
+.ore-badge--green  { background-color: #6CC349; }
+.ore-badge--blue   { background-color: #8CB3FF; }
+.ore-badge--yellow { background-color: #FFE866; }
+
+/* ── OreUI: Article ── */
+.ore-article-block {
+  display: block;
+  min-width: 270px;
+  text-align: center;
+  width: 90%;
+  color: #FFFFFF;
+}
+
+.ore-article-title {
+  color: #FFFFFF;
+  display: block;
+  font-family: 'Minecraft Seven', 'Press Start 2P', monospace;
+  font-size: 19px;
+  margin: 15px;
+}
+
+.ore-article-detail {
+  display: block;
+  font-family: 'NotoSans Bold', 'Noto Sans SC', sans-serif;
+  margin: 0 6px;
+  text-align: left;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.ore-article-list {
+  display: block;
+  margin: 8px 0;
+  padding-left: 16px;
+  position: relative;
+  font-size: 15px;
+}
+
+.ore-article-list::before {
+  background-color: #FFFFFF;
+  content: '';
+  height: 6px;
+  left: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+}
+
+/* ── OreUI: Divider ── */
+.ore-divider {
+  background-color: #58585A;
+  display: block;
+  height: 2px;
+  margin: 6px 0;
+  width: 100%;
+}
+
+/* ── Block spacing ── */
+.ore-spacing { height: 20px; }
